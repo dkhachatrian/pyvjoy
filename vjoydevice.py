@@ -2,7 +2,11 @@
 from pyvjoy.constants import *
 from pyvjoy.exceptions import *
 
+from pyvjoy.data import *
+
 import pyvjoy._sdk as _sdk
+
+import ctypes
 
 class VJoyDevice(object):
 	"""Object-oriented API for a vJoy Device"""
@@ -13,13 +17,9 @@ class VJoyDevice(object):
 		self.rID=rID
 		self._sdk=_sdk
 		self._vj=self._sdk._vj
-		
-		if data:
-			self.data = data
-		else:
-			#TODO maybe - have self.data as a wrapper object containing the Struct
-			self.data = self._sdk.CreateDataStructure(self.rID)
 
+		self.Data = Data(self)
+		
 		try:
 			_sdk.vJoyEnabled()
 			_sdk.AcquireVJD(rID)
@@ -33,7 +33,6 @@ class VJoyDevice(object):
 		"""Set a given button (numbered from 1) to On (1 or True) or Off (0 or False)"""
 		return self._sdk.SetBtn(state,self.rID,buttonID)
 
-		
 	def set_axis(self,AxisID, AxisValue):
 		"""Set a given Axis (one of pyvjoy.HID_USAGE_X etc) to a value (0x0000 - 0x8000)"""
 		return self._sdk.SetAxis(AxisValue,self.rID,AxisID)
@@ -46,14 +45,12 @@ class VJoyDevice(object):
 
 	def reset(self):
 		"""Reset all axes and buttons to default values"""
-			
 		return self._sdk.ResetVJD(self.rID)
 
 		
 	def reset_data(self):
 		"""Reset the data Struct to default (does not change vJoy device at all directly)"""
-		self.data=self._sdk.CreateDataStructure(self.rID)
-			
+		self.Data._reset()
 		
 	def reset_buttons(self):
 		"""Reset all buttons on the vJoy Device to default"""
@@ -67,7 +64,7 @@ class VJoyDevice(object):
 		
 	def update(self):
 		"""Send the stored Joystick data to the device in one go (the 'efficient' method)"""
-		return self._sdk.UpdateVJD(self.rID, self.data)
+		return self._sdk.UpdateVJD(self.rID, self.Data._data)
 
 		
 	def __del__(self):

@@ -3,7 +3,7 @@ pyvjoy is a set of Python bindings for vJoy (vjoystick.sourceforge.net)
 With this library you can easily set Axis and Button values on any vJoy device.  
 Low-level bindings are provided in pyvjoy._sdk as well as a (hopefully) slightly more 'Pythonic' API in the pyvjoy.VJoyDevice() object.
 
-Currently vJoyInterface.dll is looked for inside the pyvjoy directory only so place the desired version of that file there to use. (Note: this library currently only works with the x86 dll!)
+Currently vJoyInterface.dll is looked for inside the pyvjoy directory only so place the desired version of that file there to use.
 
 "Pointy's Joystick Test App" is very useful when testing vJoy and this library: http://www.planetpointy.co.uk/joystick-test-application/
 
@@ -40,19 +40,21 @@ j.reset_povs()
 
 #The 'efficient' method as described in vJoy's docs - set multiple values at once
 
-j.data
->>> <pyvjoy._sdk._JOYSTICK_POSITION_V2 at 0x....>
+```
+j.Data
+>> <pyvjoy.data.Data at 0x...>
 
+j.Data.labels
+>> ['bDevice','wThrottle','wRudder', ..., 'wAxisX', ..., 'lButtons', ...]
 
-j.data.lButtons = 19 # buttons number 1,2 and 5 (1+2+16)
-j.data.wAxisX = 0x2000 
-j.data.wAxisY= 0x7500
+# modify values before update
+j.Data.modify_value('wAxisX', 0x4000) # axis values range from 0x1 to 0x8000
+j.Data.modify_value('lButtons', 0x0801) # set button 1 (0x1) and button 12 (0x0800) ON
 
-#send data to vJoy device
+# update values synchronously based on j.Data
 j.update()
 
-
 #Lower-level API just wraps the functions in the DLL as thinly as possible, with some attempt to raise exceptions instead of return codes.
-
+```
 
 
