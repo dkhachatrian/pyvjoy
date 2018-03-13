@@ -69,6 +69,7 @@ class VJoyDevice(object):
 		
 	def __del__(self):
 		# free up the controller before losing access
+		# RelinquishVJD() seems to be buggy?
 		self._sdk.RelinquishVJD(self.rID)
 		
 	

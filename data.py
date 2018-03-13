@@ -20,5 +20,14 @@ class Data:
         c_val = self._label_to_type[label].__call__(value)
         self._data.__setattr__(label, c_val)
     
+    def set_data(self, data_struct):
+        """
+        Set the data of the controller to the vJoy-conforming struct data_struct.
+        The Python implementation of the struct can be found at _sdk._VJOYSTICK_POSITION_V2.
+
+        Will cause problems if the passed-in data_struct is not in a proper state! Use with care.
+        """
+        self._data = data_struct
+
     def _reset(self):
-        self._data = _sdk.CreateDataStructure(self._owner.rID)
+    	self._data = _sdk.CreateDataStructure(self._owner.rID)
