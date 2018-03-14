@@ -127,7 +127,7 @@ def SetBtn(state,rID,buttonID):
 
 def ResetVJD(rID):
 	"""Reset all axes and buttons to default for specified vJoy Device"""
-	return _vj.ResetVJD(c_uint(rID))
+	return _vj.ResetVJD(rID)
 
 
 def ResetButtons(rID):
